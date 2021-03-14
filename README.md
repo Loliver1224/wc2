@@ -1,4 +1,4 @@
-# wc2 (the modern wordcounter)
+# wc2 (the modern word-counter)
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/Loliver1224/wc2)](https://goreportcard.com/report/github.com/Loliver1224/wc2)
 <a href="LICENSE" alt="MIT License"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" /></a>
@@ -11,8 +11,8 @@ a modern word-counter with friendly output message.
 GoでのCLI開発の練習がてら作ったwcの上位互換。
 Emojiにも対応してるよ🤗
 
-## Quic Start
-Install `aaa` with a valid Go environment using `go get`:
+## Quick Start
+Install `wc2` with a valid Go environment using `go get`:
 ```shell
 > go get -u github.com/Loliver1224/wc2
 ```
