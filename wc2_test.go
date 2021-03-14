@@ -51,8 +51,7 @@ func Test_count(t *testing.T) {
 
 func Test_isBreak(t *testing.T) {
 	type args struct {
-		prev rune
-		curr rune
+		ch rune
 	}
 	tests := []struct {
 		name string
@@ -61,33 +60,23 @@ func Test_isBreak(t *testing.T) {
 	}{
 		{
 			name: "nbsp",
-			args: args{'a', 'b'},
+			args: args{'a'},
 			want: false,
 		},
 		{
-			name: "alpha + CR",
-			args: args{'y', '\r'},
+			name: "LF",
+			args: args{'\n'},
 			want: true,
 		},
 		{
-			name: "alpha + LF",
-			args: args{'y', '\n'},
-			want: true,
-		},
-		{
-			name: "CR + LF",
-			args: args{'\r', '\n'},
-			want: true,
-		},
-		{
-			name: "LF * 2",
-			args: args{'\n', '\n'},
-			want: true,
+			name: "CR",
+			args: args{'\r'},
+			want: false, // 改行コード判定後なので
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isBreak(tt.args.prev, tt.args.curr); got != tt.want {
+			if got := isBreak(tt.args.ch); got != tt.want {
 				t.Errorf("isBreak() = %v, want %v", got, tt.want)
 			}
 		})

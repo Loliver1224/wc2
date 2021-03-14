@@ -19,8 +19,7 @@ type Counter struct {
 var (
 	// 改行コード問題対策
 	isSetPlatform bool
-	isWin         bool
-	isMac         bool
+	isMacOrWin    bool
 	isUnix        bool
 )
 
@@ -30,25 +29,24 @@ func changeMax(a, b *int) {
 	}
 }
 
-func isBreak(prev, curr rune) bool {
+func isBreak(ch rune) bool {
+	// 最初に出てくる改行文字で改行コードを判定
 	if !isSetPlatform {
-		if prev == '\r' && curr == '\n' {
-			isWin = true
-			isSetPlatform = true
-			return true
-		} else if curr == '\n' {
+		if ch == '\n' {
 			isUnix = true
 			isSetPlatform = true
+			fmt.Println("setLF")
 			return true
-		} else if curr == '\r' {
-			isMac = true
+		} else if ch == '\r' {
+			isMacOrWin = true
 			isSetPlatform = true
+			fmt.Println("setCR")
 			return true
 		}
 	} else {
-		if (isWin || isUnix) && curr == '\n' {
+		if isUnix && ch == '\n' {
 			return true
-		} else if isMac && curr == '\r' {
+		} else if isMacOrWin && ch == '\r' {
 			return true
 		}
 	}
@@ -71,9 +69,11 @@ func count(file *os.File) (cnt *Counter) {
 		}
 
 		cnt.bytes += size
-		if isBreak(prevCh, ch) {
+		if isBreak(ch) {
 			cnt.lines++
-			cnt.words++
+			if !isBreak(prevCh) && isInWord {
+				cnt.words++
+			}
 			isInWord = false
 			changeMax(&cnt.maxLineLength, &lineWidth)
 			lineWidth = 0
@@ -83,7 +83,7 @@ func count(file *os.File) (cnt *Counter) {
 		} else if !unicode.IsSpace(ch) && unicode.IsGraphic(ch) {
 			isInWord = true
 		}
-		if !isBreak(prevCh, ch) && unicode.IsGraphic(ch) {
+		if !isBreak(ch) && unicode.IsGraphic(ch) {
 			cnt.chars++
 			lineWidth++
 		}
@@ -92,6 +92,14 @@ func count(file *os.File) (cnt *Counter) {
 	// 入力が空でなければ，1行目分をカウント
 	if cnt.bytes > 0 {
 		cnt.lines++
+	}
+
+	// 最終行の処理
+	// 最大長判定
+	changeMax(&cnt.maxLineLength, &lineWidth)
+	// 直前の文字が改行でなければwords++
+	if !isBreak(prevCh) {
+		cnt.words++
 	}
 	return
 }
