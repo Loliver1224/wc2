@@ -1,5 +1,6 @@
 # wc2 (the modern wordcounter)
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/Loliver1224/wc2)](https://goreportcard.com/report/github.com/Loliver1224/wc2)
 <a href="LICENSE" alt="MIT License"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" /></a>
 
 `wc2` is a modern wc(Word Count) command.
